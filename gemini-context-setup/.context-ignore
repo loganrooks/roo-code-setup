@@ -1,0 +1,25 @@
+# Ignore specific file patterns
+*.log
+*.lock
+*.tmp
+*.temp
+
+# Ignore specific files
+*context.txt
+create_context_file.py
+.context-ignore
+.clinerules-*
+.roomodes
+**system-prompt*
+
+# Ignore directories (must end with a slash)
+.git/
+node_modules/
+__pycache__/
+venv/
+.venv/
+.roo/
+
+# You can also use glob patterns
+**/*.pyc
+**/*.pyo
