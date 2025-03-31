@@ -111,6 +111,84 @@ memory_bank_updates:
         Use insert_content to *append* the new entry, never overwrite existing entries. Always include a timestamp.
       format: "[YYYY-MM-DD HH:MM:SS] - [Summary of Change/Focus/Issue]"
 
+context_window_management:
+  gemini_model_detection:
+    indicators:
+      - "Context window equals or exceeds 1 Million tokens"
+      - "Current Context Size displays percentage"
+    threshold: 33
+    actions: |
+      1. **MONITOR CONTEXT WINDOW:**
+         <thinking>
+         I need to regularly check the context window usage percentage displayed in "Current Context Size (Tokens)" section.
+         </thinking>
+      2. **THRESHOLD DETECTION:**
+         * When context usage reaches 33% (1/3) of maximum:
+           <thinking>
+           Context window is approaching critical levels that may affect performance and completion of tasks.
+           </thinking>
+           a. Alert user: "Context window is at [PERCENTAGE]%. To maintain optimal performance, I need to wrap up the current task and update the Memory Bank."
+           b. Complete immediate subtask (don't start new complex operations)
+           c. Update Memory Bank with current progress and state:
+              <thinking>
+              Need to ensure all relevant progress is documented in Memory Bank files for continuity.
+              </thinking>
+              * Use insert_content to update all relevant Memory Bank files with detailed state information
+              * Ensure activeContext.md captures exact stopping point and next steps
+              * Add checkpoint information to progress.md with specific continuation instructions
+      3. **PREPARE FOR CLEAN RESTART:**
+         * Recommend new task creation:
+           <thinking>
+           I need to help the user smoothly continue their work in a fresh context.
+           </thinking>
+           a. Provide specific instructions for continuing work
+           b. Suggest using:
+              <new_task>
+              <mode>code</mode>
+              <message>Continue from checkpoint: [SPECIFIC TASK DESCRIPTION]</message>
+              </new_task>
+      4. **CONTINUATION STRATEGY:**
+         * First action in new session:
+           <thinking>
+           I need to read Memory Bank to restore full context before proceeding.
+           </thinking>
+           a. Read all Memory Bank files (especially checkpoint information)
+           b. Acknowledge previous session stopping point
+           c. Resume work from exact point of interruption
+
+testing_workflow:
+  triggers:
+    - "After implementing a new feature or functionality"
+    - "After making significant changes to existing code"
+    - "After fixing a bug"
+    - "When completing a task that implements core business logic"
+    - "When code reliability is critical for the feature being implemented"
+  actions: |
+    1. **TEST RECOMMENDATION:**
+       <thinking>
+       I need to evaluate if testing is appropriate for the code that was just implemented.
+       </thinking>
+       * When a testing trigger condition is met:
+         <thinking>
+         Based on the nature and scope of the changes made, testing would be beneficial.
+         </thinking>
+         a. Alert user: "I've completed implementing [FEATURE/CHANGE]. Would you like me to add tests for this implementation?"
+         b. If the user agrees:
+            <switch_mode>
+            <mode_slug>test</mode_slug>
+            <reason>To create appropriate tests for the implemented code.</reason>
+            </switch_mode>
+         c. If the user declines:
+            * Document the decision in Memory Bank (if active)
+            * Proceed with the next task or suggest next steps
+    2. **TESTING CONSIDERATIONS:**
+       * Recommendation factors to mention to the user:
+         - Code complexity and risk level
+         - Critical business logic implementation
+         - Potential regression impacts
+         - Areas where tests would provide most value
+         - Appropriate testing methodology (unit, integration, e2e)
+
 umb:
   trigger: "^(Update Memory Bank|UMB)$"
   instructions:
