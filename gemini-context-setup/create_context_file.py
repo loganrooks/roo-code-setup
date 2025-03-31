@@ -32,7 +32,7 @@ def get_file_info(file_path: Path) -> Dict[str, Any]:
     mime_type, _ = mimetypes.guess_type(str(file_path))
     if mime_type is None:
         # Try to determine type from extension or content
-        if file_path.suffix in ['.py', '.js', '.ts', '.java', '.cpp', '.c', '.go', '.rs', '.php', '.rb']:
+        if file_path.suffix in ['.py', '.js', '.ts', '.tsx', '.jsx', '.java', '.cpp', '.c', '.go', '.rs', '.php', '.rb', '.sh', '.bash', '.html', '.htm', '.css', '.json', '.yaml', '.yml', '.xml', '.sql', '.swift', '.kt', '.kts', '.cs', '.scala', '.pl', '.pm', '.lua']:
             file_type = "code"
         elif file_path.suffix in ['.md', '.txt', '.rst', '.adoc']:
             file_type = "documentation"
@@ -40,6 +40,8 @@ def get_file_info(file_path: Path) -> Dict[str, Any]:
             file_type = "documentation"
         elif 'adr' in str(file_path).lower() and file_path.suffix == '.md':
             file_type = "architecture_decision"
+        elif file_path.name == 'Dockerfile' or file_path.suffix in ['.conf', '.cfg', '.ini']:
+            file_type = "code"
         else:
             file_type = "unknown"
     else:
@@ -47,7 +49,7 @@ def get_file_info(file_path: Path) -> Dict[str, Any]:
             if 'markdown' in mime_type:
                 file_type = "documentation"
             else:
-                file_type = "code" if mime_type.split('/')[-1] in ['x-python', 'javascript', 'x-java', 'x-c'] else "text"
+                file_type = "code" if mime_type.split('/')[-1] in ['x-python', 'javascript', 'typescript', 'jsx', 'x-java', 'x-c', 'x-sh', 'html', 'css', 'json', 'x-yaml', 'yaml', 'xml', 'sql', 'x-swift', 'x-kotlin', 'x-csharp', 'x-scala', 'x-perl', 'x-lua'] else "text"
         else:
             file_type = "binary"
     
